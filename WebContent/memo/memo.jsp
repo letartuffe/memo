@@ -7,9 +7,11 @@
 <%@page import="com.memo.memo.*" %>
 
 
-<% String id = (String) session.getAttribute("userid"); %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
+
+
+<% String id = (String) session.getAttribute("userid"); %>
 
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
@@ -67,7 +69,7 @@
 
 <span>한 줄 메모 게시판</span>
 <br>
-
+<a href="/memo/login/main.jsp">메인으로</a>
 
 <c:set var="getSize" value="${fn:length(memo)}"/>  
 
@@ -135,8 +137,16 @@
 		      <td><div class="contentView" id="contentView_${vec.no}" name="contentView_${vec.no}">${vec.content}</div>
 		      	  <div class="contentEditView" id="contentEditView_${vec.no}" name="contentEditView_${vec.no}"><input type="text" name="editedContent_${vec.no}" id="editedContent_${vec.no}"><input type="button" value="등록"  onclick="editSubmit(${vec.no})"></div></td>
 		      <td>${vec.regDate}</td>
-		      <td><input value="수정" type="button" onclick="modifyConfirm(${vec.no})" ></td>
-		      <td><input value="삭제" type="button" onclick="deleteSubmit(${vec.no})" ></td>
+		      
+
+		      <td>
+			 <c:if test="${vec.id == sessionScope.userid }">
+ 		    	  <input value='수정' type='button' onclick='modifyConfirm(${vec.no})' >
+ 		    	  </c:if>
+			</td> 
+ 		     
+		      <td> <c:if test="${vec.id == sessionScope.userid }"><input value="삭제" type="button" onclick="deleteSubmit(${vec.no})" ></td>
+		      </c:if>   
 		    </tr>
 		</c:forEach>
 		
@@ -144,6 +154,8 @@
 		</table>
 		
 		</form>
+		
+		
 		<form method="post" action="/memo/Memo" name="memoFormWrite">
 		<input type="hidden" name="mode">
 		메모 : 
